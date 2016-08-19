@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Level.MAP_WIDTH, Level.MAP_HEIGHT);
 
-        level = new Level("map_01.tmx", game.batch);
+        level = new Level("map_02.tmx", game.batch);
         entityHandler = new EntityHandler(level);
     }
 
