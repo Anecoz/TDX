@@ -1,5 +1,6 @@
 package com.anecoz.tdx;
 
+import com.anecoz.tdx.entities.EntityHandler;
 import com.anecoz.tdx.level.Level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,6 +23,7 @@ public class GameScreen implements Screen {
 
     final TDXGame game;
     private Level level;
+    private EntityHandler entityHandler;
 
     OrthographicCamera camera;
 
@@ -31,7 +33,12 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Level.MAP_WIDTH, Level.MAP_HEIGHT);
 
-        level = new Level("map_01.tmx");
+        level = new Level("map_01.tmx", game.batch);
+        entityHandler = new EntityHandler(level);
+    }
+
+    private void tick() {
+        entityHandler.tick();
     }
 
     @Override
@@ -39,13 +46,15 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        tick();
+
         // tell the camera to update its matrices.
         camera.update();
-
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
         level.render(camera);
+        entityHandler.render(game.batch);
         game.batch.end();
 
         // process user input

@@ -1,10 +1,15 @@
 package com.anecoz.tdx.level;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 
 // Abstraction for the level, i.e. tiles etc
 public class Level {
@@ -19,22 +24,61 @@ public class Level {
     private final static String WALKABLE_PROPERTY = "isWalkable";
 
     private OrthogonalTiledMapRenderer _mapRenderer;
-    private TiledMap _map;
     private TiledMapTileLayer _tileLayer;
+    private Path _path;
 
-    public Level(String mapName) {
-        _map = new TmxMapLoader().load(mapName);
-        _tileLayer = (TiledMapTileLayer)_map.getLayers().get(0);
+    public Level(String mapName, SpriteBatch batch) {
+        TiledMap map = new TmxMapLoader().load(mapName);
+        _tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
 
-        _mapRenderer = new OrthogonalTiledMapRenderer(_map, 1/64f);
+        _mapRenderer = new OrthogonalTiledMapRenderer(map, 1/64f, batch);
+
+        Pathfinder pathFinder = new Pathfinder(this);
+        _path = pathFinder.findPath();
+    }
+
+    public Path getPath() {
+        return _path;
+    }
+
+    public Vector2 getEndTile() {
+        for (int x = 0; x < _tileLayer.getWidth(); x++)
+            for (int y = 0; y < _tileLayer.getHeight(); y++) {
+                if (isEndTile(x, y))
+                    return new Vector2(x, y);
+            }
+        return null;
+    }
+
+    public Vector2 getStartTile() {
+        for (int x = 0; x < _tileLayer.getWidth(); x++)
+            for (int y = 0; y < _tileLayer.getHeight(); y++) {
+                if (isStartTile(x, y))
+                    return new Vector2(x, y);
+            }
+        return null;
+    }
+
+    public ArrayList<Vector2> getNeighboursPosAt(int x, int y) {
+        ArrayList<Vector2> output = new ArrayList<Vector2>();
+
+        if (isTileWalkableAt(x - 1, y)) output.add(new Vector2(x - 1, y));
+        if (isTileWalkableAt(x, y + 1)) output.add(new Vector2(x, y + 1));
+        if (isTileWalkableAt(x, y - 1)) output.add(new Vector2(x, y - 1));
+        if (isTileWalkableAt(x + 1, y)) output.add(new Vector2(x + 1, y));
+
+        return output;
     }
 
     public void render(OrthographicCamera camera) {
         _mapRenderer.setView(camera);
-        _mapRenderer.render();
+        _mapRenderer.renderTileLayer(_tileLayer);
     }
 
     private boolean isProperty(String prop, int x, int y) {
+        if (_tileLayer.getCell(x, y) == null)
+            return false;
+
         return _tileLayer.getCell(x, y)
                 .getTile()
                 .getProperties()
