@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class EntityHandler {
 
@@ -19,12 +20,20 @@ public class EntityHandler {
         _level = level;
         _enemyTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
 
-        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.7f));
+        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
     }
 
     public void tick() {
-        for (Enemy enemy : _enemies) {
+        ListIterator<Enemy> it = _enemies.listIterator();
+        while (it.hasNext()) {
+            Enemy enemy = it.next();
             enemy.tick();
+            // Kill dead ones
+            if (enemy.isDead())
+                it.remove();
         }
     }
 

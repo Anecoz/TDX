@@ -15,6 +15,11 @@ public class Path {
         _pathData = pathData;
     }
 
+    public boolean isLastPos(int x, int y) {
+        Vector2 node = _pathData.get(_pathData.size() - 1);
+        return (int)node.x == x && (int)node.y == y;
+    }
+
     public Vector2 getNextPosFrom(int x, int y) {
         for (Vector2 node : _pathData) {
             if ((int)node.x == x && (int)node.y == y) {
