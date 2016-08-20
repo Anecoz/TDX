@@ -11,7 +11,7 @@ import java.util.ListIterator;
 
 public class EntityHandler {
 
-    private ArrayList<Enemy> _enemies;
+    public static ArrayList<Enemy> _enemies;
     private Level _level;
     public static Texture _enemyTexture;
     public static Texture _turretTexture;
@@ -22,10 +22,10 @@ public class EntityHandler {
         _enemyTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
         _turretTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
 
-        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
-        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
-        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
-        _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
     }
 
     public void tick() {

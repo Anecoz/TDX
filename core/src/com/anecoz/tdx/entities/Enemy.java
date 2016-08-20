@@ -1,5 +1,7 @@
 package com.anecoz.tdx.entities;
 
+import com.anecoz.tdx.graphics.Drawable;
+import com.anecoz.tdx.graphics.HealthBar;
 import com.anecoz.tdx.level.Path;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,30 +11,30 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-public class Enemy {
+public class Enemy extends Drawable {
 
-    private Vector2 _position;
     private Vector2 _velocity;
-    private float _speed = 1.6f;
+    private float _speed = 1.0f;
     private Vector2 _offset;
     private Vector2 _currentGoalPos;
 
-    private Texture _texture;
-    private float _size;
+    private float _health;
+    private HealthBar _healthBar;
 
     private Rectangle _boundingBox;
     private Path _path;
 
-    private boolean dead = false;
+    private boolean _dead = false;
 
     public Enemy(Vector2 startPos, Texture texture, Path path, float size) {
-        _position = new Vector2(startPos);
-        _texture = texture;
+        super(texture, startPos, size);
         _velocity = new Vector2(0f, 0f);
-        _size = size;
         _path = path;
 
         _currentGoalPos = _path.getNextPosFrom((int)Math.floor(_position.x), (int)Math.floor(_position.y));
+
+        _health = 100f;
+        _healthBar = new HealthBar(_position, _size, _size);
 
         // Calculate an offset that this particular enemy has in relation to the path
         Random rand = new Random();
@@ -50,14 +52,20 @@ public class Enemy {
     }
 
     public boolean isDead() {
-        return dead;
+        return _dead;
+    }
+
+    public void takeDamage(float damage) {
+        _health -= damage;
+        if (_health <= 0)
+            _dead = true;
     }
 
     private void updateVelocity() {
         // Have we reached close enough to goal pos?
         if (Math.abs(_position.x - _currentGoalPos.x) <= 0.1 && Math.abs(_position.y - _currentGoalPos.y) <= 0.1) {
             if (_path.isLastPos((int)Math.floor(_position.x), (int)Math.floor(_position.y))) {
-                dead = true;
+                _dead = true;
                 return;
             }
             _currentGoalPos = _path.getNextPosFrom((int)Math.floor(_position.x), (int)Math.floor(_position.y));
@@ -70,24 +78,18 @@ public class Enemy {
     }
 
     public void tick() {
-        if (!dead) {
+        if (!_dead) {
             updateVelocity();
             _position.x += _velocity.x * Gdx.graphics.getDeltaTime();
             _position.y += _velocity.y * Gdx.graphics.getDeltaTime();
         }
     }
 
+    @Override
     public void render(SpriteBatch batch) {
-        if (!dead)
-            batch.draw(_texture, _position.x, _position.y, _size, _size);
+        if (!_dead) {
+            super.render(batch);
+            _healthBar.render(batch, _health);
+        }
     }
-
-    public void setSize(float size) {
-        _size = size;
-    }
-
-    public float getSize() {
-        return _size;
-    }
-
 }
