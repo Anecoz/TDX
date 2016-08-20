@@ -25,9 +25,9 @@ public class EntityHandler {
         _slowTurretTexture = new Texture(Gdx.files.internal("droplet.png"));
 
         _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
-        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
-        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
-        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        //_enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        //_enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        //_enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
     }
 
     static public Texture getTurretTexture(int turretType) {

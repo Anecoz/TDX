@@ -13,6 +13,7 @@ public abstract class Turret extends Drawable {
     protected Enemy _currentTarget = null;
     protected float _damage;
     protected float _cooldown; //< in seconds
+    private long _lastActionTime;
 
     public final static int DAMAGE_TURRET_TYPE = 0;
     public final static int SLOW_TURRET_TYPE = 1;
@@ -23,6 +24,19 @@ public abstract class Turret extends Drawable {
         _damage = 6f;
         _range = 1.5f;
         _cooldown = 0.5f;
+        _lastActionTime = -1;
+    }
+
+    protected void resetCooldown() {
+        _lastActionTime = TimeUtils.nanoTime();
+    }
+
+    protected boolean isOnCooldown() {
+        if (_lastActionTime == -1)
+            return false;
+
+        long currTime = TimeUtils.nanoTime();
+        return !(currTime - _lastActionTime >= (_cooldown * 1000000000));
     }
 
     public void tick() {
