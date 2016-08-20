@@ -1,6 +1,7 @@
 package com.anecoz.tdx;
 
 import com.anecoz.tdx.entities.EntityHandler;
+import com.anecoz.tdx.entities.Player;
 import com.anecoz.tdx.level.Level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -24,6 +25,7 @@ public class GameScreen implements Screen {
     final TDXGame game;
     private Level level;
     private EntityHandler entityHandler;
+    private Player player;
 
     OrthographicCamera camera;
 
@@ -35,9 +37,11 @@ public class GameScreen implements Screen {
 
         level = new Level("map_02.tmx", game.batch);
         entityHandler = new EntityHandler(level);
+        player = new Player(level);
     }
 
     private void tick() {
+        player.tick(camera);
         entityHandler.tick();
     }
 
@@ -55,16 +59,8 @@ public class GameScreen implements Screen {
         game.batch.begin();
         level.render(camera);
         entityHandler.render(game.batch);
+        player.render(game.batch);
         game.batch.end();
-
-        // process user input
-        /*if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            bucket.x = touchPos.x - 64 / 2;
-        }
-        raindrop.y -= 200 * Gdx.graphics.getDeltaTime();*/
     }
 
     @Override

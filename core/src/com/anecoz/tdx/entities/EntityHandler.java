@@ -13,12 +13,14 @@ public class EntityHandler {
 
     private ArrayList<Enemy> _enemies;
     private Level _level;
-    private Texture _enemyTexture;
+    public static Texture _enemyTexture;
+    public static Texture _turretTexture;
 
     public EntityHandler(Level level) {
         _enemies = new ArrayList<Enemy>();
         _level = level;
         _enemyTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
+        _turretTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
 
         _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
         _enemies.add(new Enemy(_level.getStartTile(), _enemyTexture, _level.getPath(), 0.3f));
