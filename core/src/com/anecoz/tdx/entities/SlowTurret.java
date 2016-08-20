@@ -10,7 +10,7 @@ public class SlowTurret extends Turret {
     public SlowTurret(Texture texture, Vector2 position) {
         super(texture, position);
         _cooldown = 2.0f;
-        _range = 3f;
+        _range = 1f;
     }
 
     @Override

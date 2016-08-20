@@ -45,12 +45,12 @@ public abstract class Turret extends Drawable {
 
     private void updateTracking() {
         if (_currentTarget != null) {
-            if (_currentTarget.distanceTo(_position) >= _range || _currentTarget.isDead()) {
+            if (_currentTarget.distanceTo(getMiddlePos()) > _range || _currentTarget.isDead()) {
                 _currentTarget = null;
                 _rotation = 0.0f;
             }
             else
-                _rotation = new Vector2(_currentTarget.getPosition()).sub(_position).angle();
+                _rotation = _currentTarget.getMiddlePos().sub(getMiddlePos()).angle();
         }
         else {
             Enemy enemy = findFirstCloseEnemy();
@@ -62,7 +62,7 @@ public abstract class Turret extends Drawable {
 
     private Enemy findFirstCloseEnemy() {
         for (Enemy enemy : EntityHandler._enemies) {
-            if (enemy.distanceTo(_position) <= _range)
+            if (enemy.distanceTo(getMiddlePos()) <= _range)
                 return enemy;
         }
         return null;

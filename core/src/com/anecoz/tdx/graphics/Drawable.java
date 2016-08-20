@@ -29,8 +29,12 @@ public abstract class Drawable {
         return _texture;
     }
 
+    public Vector2 getMiddlePos() {
+        return new Vector2(_position.x + _size/2.0f, _position.y + _size/2.0f);
+    }
+
     public float distanceTo(Vector2 compare) {
-        return _position.dst(compare);
+        return getMiddlePos().dst(compare);
     }
 
     public void render(SpriteBatch batch) {

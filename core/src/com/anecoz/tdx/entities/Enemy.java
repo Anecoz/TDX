@@ -21,6 +21,7 @@ public class Enemy extends Drawable {
     private float _speed;
     private Vector2 _offset;
     private Vector2 _currentGoalPos;
+    private Vector2 _direction;
 
     private float _health;
     private HealthBar _healthBar;
@@ -53,9 +54,9 @@ public class Enemy extends Drawable {
         _currentGoalPos.x += _offset.x;
         _currentGoalPos.y += _offset.y;
 
-        Vector2 dir = new Vector2(_currentGoalPos.x - _position.x, _currentGoalPos.y - _position.y).nor();
-        _velocity.x = _speed * dir.x;
-        _velocity.y = _speed * dir.y;
+        _direction = new Vector2(_currentGoalPos.x - _position.x, _currentGoalPos.y - _position.y).nor();
+        _velocity.x = _speed * _direction.x;
+        _velocity.y = _speed * _direction.y;
     }
 
     public void addDebuff(Debuff debuff) {
@@ -89,10 +90,10 @@ public class Enemy extends Drawable {
             _currentGoalPos = _path.getNextPosFrom((int)Math.floor(_position.x), (int)Math.floor(_position.y));
             _currentGoalPos.x += _offset.x;
             _currentGoalPos.y += _offset.y;
-            Vector2 dir = new Vector2(_currentGoalPos.x - _position.x, _currentGoalPos.y - _position.y).nor();
-            _velocity.x = _speed * dir.x;
-            _velocity.y = _speed * dir.y;
+            _direction = new Vector2(_currentGoalPos.x - _position.x, _currentGoalPos.y - _position.y).nor();
         }
+        _velocity.x = _speed * _direction.x;
+        _velocity.y = _speed * _direction.y;
     }
 
     private void updateDebuffs() {
