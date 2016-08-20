@@ -36,8 +36,8 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, Level.MAP_WIDTH, Level.MAP_HEIGHT+1); //< for space for bar
 
         level = new Level("map_02.tmx", game.batch);
-        entityHandler = new EntityHandler(level);
         player = new Player(level);
+        entityHandler = new EntityHandler(level, player);
     }
 
     private void tick() {
@@ -61,6 +61,8 @@ public class GameScreen implements Screen {
         entityHandler.render(game.batch);
         player.render(game.batch);
         game.batch.end();
+
+        player.getMoney().render();
     }
 
     @Override

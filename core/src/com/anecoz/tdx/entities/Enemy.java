@@ -29,8 +29,11 @@ public class Enemy extends Drawable {
     private Path _path;
 
     private boolean _dead = false;
+    private boolean _finished = false;
 
     private ArrayList<Debuff> _debuffs;
+
+    private int _worth;
 
     public Enemy(Vector2 startPos, Texture texture, Path path, float size) {
         super(texture, startPos, size);
@@ -38,6 +41,7 @@ public class Enemy extends Drawable {
         _path = path;
         _speed = _baseSpeed;
         _debuffs = new ArrayList<Debuff>();
+        _worth = 1;
 
         _currentGoalPos = _path.getNextPosFrom((int)Math.floor(_position.x), (int)Math.floor(_position.y));
 
@@ -59,6 +63,10 @@ public class Enemy extends Drawable {
         _velocity.y = _speed * _direction.y;
     }
 
+    public int getWorth() {
+        return _worth;
+    }
+
     public void addDebuff(Debuff debuff) {
         debuff.apply(this);
         _debuffs.add(debuff);
@@ -74,6 +82,10 @@ public class Enemy extends Drawable {
         return _dead;
     }
 
+    public boolean isFinished() {
+        return _finished;
+    }
+
     public void takeDamage(float damage) {
         _health -= damage;
         if (_health <= 0)
@@ -84,7 +96,7 @@ public class Enemy extends Drawable {
         // Have we reached close enough to goal pos?
         if (Math.abs(_position.x - _currentGoalPos.x) <= 0.1 && Math.abs(_position.y - _currentGoalPos.y) <= 0.1) {
             if (_path.isLastPos((int)Math.floor(_position.x), (int)Math.floor(_position.y))) {
-                _dead = true;
+                _finished = true;
                 return;
             }
             _currentGoalPos = _path.getNextPosFrom((int)Math.floor(_position.x), (int)Math.floor(_position.y));
@@ -109,7 +121,7 @@ public class Enemy extends Drawable {
     }
 
     public void tick() {
-        if (!_dead) {
+        if (!_dead && !_finished) {
             updateDebuffs();
             updateVelocity();
             _position.x += _velocity.x * Gdx.graphics.getDeltaTime();

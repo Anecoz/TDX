@@ -13,21 +13,37 @@ public class EntityHandler {
 
     public static ArrayList<Enemy> _enemies;
     private Level _level;
+    private Player _player;
     public static Texture _enemyTexture;
     public static Texture _dmgTurretTexture;
     public static Texture _slowTurretTexture;
+    public static Texture _crossTexture;
 
-    public EntityHandler(Level level) {
+    public EntityHandler(Level level, Player player) {
         _enemies = new ArrayList<Enemy>();
         _level = level;
+        _player = player;
         _enemyTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
         _dmgTurretTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
         _slowTurretTexture = new Texture(Gdx.files.internal("droplet.png"));
+        _crossTexture = new Texture(Gdx.files.internal("cross.png"));
 
         _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
-        //_enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
-        //_enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
-        //_enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+        _enemies.add(new Enemy(new Vector2(_level.getStartTile()), _enemyTexture, _level.getPath(), 0.3f));
+    }
+
+    static Turret getTurretFromType(int turretType, Vector2 spawnPos) {
+        switch (turretType) {
+            case Turret.DAMAGE_TURRET_TYPE:
+                return new DamageTurret(EntityHandler._dmgTurretTexture, spawnPos);
+            case Turret.SLOW_TURRET_TYPE:
+                return new SlowTurret(EntityHandler._slowTurretTexture, spawnPos);
+            default:
+                break;
+        }
+        return null;
     }
 
     static public Texture getTurretTexture(int turretType) {
@@ -47,9 +63,14 @@ public class EntityHandler {
         while (it.hasNext()) {
             Enemy enemy = it.next();
             enemy.tick();
-            // Kill dead ones
-            if (enemy.isDead())
+            // Kill dead ones and give player money for it
+            if (enemy.isDead()) {
+                _player.addMoney(enemy.getWorth());
                 it.remove();
+            }
+            else if (enemy.isFinished()) {
+                it.remove();
+            }
         }
     }
 

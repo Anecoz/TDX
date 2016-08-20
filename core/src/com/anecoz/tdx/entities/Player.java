@@ -2,6 +2,7 @@ package com.anecoz.tdx.entities;
 
 
 import com.anecoz.tdx.level.Level;
+import com.anecoz.tdx.logic.Money;
 import com.anecoz.tdx.logic.TurretPicker;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,11 +17,13 @@ public class Player {
     private Level _level;
     private ArrayList<Turret> _turrets;
     private TurretPicker _turretPicker;
+    private Money _money;
 
     public Player(Level level) {
         _level = level;
         _turrets = new ArrayList<Turret>();
-        _turretPicker = new TurretPicker();
+        _turretPicker = new TurretPicker(this);
+        _money = new Money();
     }
 
     public void render(SpriteBatch batch) {
@@ -28,6 +31,14 @@ public class Player {
         for (Turret turret : _turrets) {
             turret.render(batch);
         }
+    }
+
+    public Money getMoney() {
+        return _money;
+    }
+
+    public void addMoney(int amount) {
+        _money.addCash(amount);
     }
 
     public void tick(OrthographicCamera camera) {
@@ -41,27 +52,22 @@ public class Player {
             if (_turretPicker.hasSelection()) {
                 if (_level.isTileBuildableAt((int)touchPos.x, (int)touchPos.y)
                         && isTileFree((int)touchPos.x, (int)touchPos.y)) {
-                    _turrets.add(getTurretFromType(_turretPicker.getSelectedTurretType(),
-                            new Vector2((float)Math.floor(touchPos.x), (float)Math.floor(touchPos.y))));
-                    _turretPicker.clearSelection();
+
+                    // Can we afford it?
+                    int cost = Turret.getCostFromType(_turretPicker.getSelectedTurretType());
+                    if (_money.canAfford(cost)) {
+                        _turrets.add(EntityHandler.getTurretFromType(_turretPicker.getSelectedTurretType(),
+                                new Vector2((float)Math.floor(touchPos.x), (float)Math.floor(touchPos.y))));
+                        _turretPicker.clearSelection();
+
+                        _money.deductCash(cost);
+                    }
                 }
             }
         }
         for (Turret turret : _turrets) {
             turret.tick();
         }
-    }
-
-    private Turret getTurretFromType(int turretType, Vector2 spawnPos) {
-        switch (turretType) {
-            case Turret.DAMAGE_TURRET_TYPE:
-                return new DamageTurret(EntityHandler._dmgTurretTexture, spawnPos);
-            case Turret.SLOW_TURRET_TYPE:
-                return new SlowTurret(EntityHandler._slowTurretTexture, spawnPos);
-            default:
-                break;
-        }
-        return null;
     }
 
     private boolean isTileFree(int x, int y) {

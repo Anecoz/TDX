@@ -19,7 +19,7 @@ public class DamageTurret extends Turret {
         if (_currentTarget != null) {
             if (!isOnCooldown()) {
                 _currentTarget.takeDamage(_damage);
-                resetCooldown();
+                startCooldown();
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.anecoz.tdx.logic;
 
 import com.anecoz.tdx.entities.EntityHandler;
+import com.anecoz.tdx.entities.Player;
 import com.anecoz.tdx.entities.Turret;
 import com.anecoz.tdx.level.Level;
 import com.badlogic.gdx.Gdx;
@@ -19,9 +20,11 @@ public class TurretPicker {
     private float _size;
     private boolean _hasSelection;
     private int _selectedTurretType;
+    private Player _player;
 
-    public TurretPicker() {
+    public TurretPicker(Player player) {
         _turretMap = new HashMap<Vector2, Integer>();
+        _player = player;
 
         _turretMap.put(new Vector2(0, Level.MAP_HEIGHT), Turret.DAMAGE_TURRET_TYPE);
         _turretMap.put(new Vector2(1, Level.MAP_HEIGHT), Turret.SLOW_TURRET_TYPE);
@@ -61,7 +64,7 @@ public class TurretPicker {
             camera.unproject(touchPos);
             int selectedTurretType = getSelectedTurretType(new Vector2(touchPos.x, touchPos.y));
             if (!_hasSelection) {
-                if (selectedTurretType != -1) {
+                if (selectedTurretType != -1 && _player.getMoney().canAfford(Turret.getCostFromType(selectedTurretType))) {
                     _hasSelection = true;
                     _selectedTurretType = selectedTurretType;
                 }
@@ -92,6 +95,13 @@ public class TurretPicker {
                         currPos.x + 0.5f - _size/2.0f,
                         currPos.y + 0.5f - _size/2.0f,
                         _size, _size);
+
+                if (!_player.getMoney().canAfford(Turret.getCostFromType(currTurrType))) {
+                    // Draw cross over
+                    batch.draw(EntityHandler._crossTexture,
+                            currPos.x, currPos.y,
+                            1.0f, 1.0f);
+                }
             }
         }
     }

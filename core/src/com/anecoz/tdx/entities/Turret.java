@@ -27,7 +27,18 @@ public abstract class Turret extends Drawable {
         _lastActionTime = -1;
     }
 
-    protected void resetCooldown() {
+    public static int getCostFromType(int type) {
+        switch (type) {
+            case DAMAGE_TURRET_TYPE:
+                return 10;
+            case SLOW_TURRET_TYPE:
+                return 15;
+            default:
+                return -1;
+        }
+    }
+
+    protected void startCooldown() {
         _lastActionTime = TimeUtils.nanoTime();
     }
 

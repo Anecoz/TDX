@@ -23,7 +23,7 @@ public class SlowTurret extends Turret {
         if (_currentTarget != null) {
             if (!isOnCooldown()) {
                 _currentTarget.addDebuff(new SlowDebuff(3.0f));
-                resetCooldown();
+                startCooldown();
             }
         }
     }
