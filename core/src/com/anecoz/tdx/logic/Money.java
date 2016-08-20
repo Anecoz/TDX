@@ -1,5 +1,6 @@
 package com.anecoz.tdx.logic;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +13,8 @@ public class Money {
 
     public Money() {
         _cash = 10;
-        _font = new BitmapFont(); //< uses default arial font
+        _font = new BitmapFont(Gdx.files.internal("calibri.fnt"), Gdx.files.internal("calibri.png"), false);
+        _font.getData().setScale(0.25f);
 
         _camera = new OrthographicCamera();
         _camera.setToOrtho(false, 300, 300);
@@ -40,7 +42,7 @@ public class Money {
         _camera.update();
         _batch.setProjectionMatrix(_camera.combined);
         _batch.begin();
-        _font.draw(_batch, "Money: " + _cash, 220, 280);
+        _font.draw(_batch, "Money: " + _cash, 210, 278);
         _batch.end();
     }
 }
