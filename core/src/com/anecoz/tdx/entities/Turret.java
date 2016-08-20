@@ -7,14 +7,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class Turret extends Drawable {
+public abstract class Turret extends Drawable {
 
-    private float _range; //< Radius around turret (circle)
-    private Enemy _currentTarget = null;
-    private float _damage;
-    private float _cooldown; //< in seconds
+    protected float _range; //< Radius around turret (circle)
+    protected Enemy _currentTarget = null;
+    protected float _damage;
+    protected float _cooldown; //< in seconds
 
-    private long _lastShootTime;
+    public final static int DAMAGE_TURRET_TYPE = 0;
+    public final static int SLOW_TURRET_TYPE = 1;
 
     public Turret(Texture texture, Vector2 position) {
         super(texture, position, 1.0f);
@@ -22,23 +23,10 @@ public class Turret extends Drawable {
         _damage = 6f;
         _range = 1.5f;
         _cooldown = 0.5f;
-
-        _lastShootTime = TimeUtils.nanoTime();
     }
 
     public void tick() {
         updateTracking();
-        shoot();
-    }
-
-    private void shoot() {
-        if (_currentTarget != null) {
-            long currTime = TimeUtils.nanoTime();
-            if (currTime - _lastShootTime >= (_cooldown * 1000000000)) {
-                _currentTarget.takeDamage(_damage);
-                _lastShootTime = currTime;
-            }
-        }
     }
 
     private void updateTracking() {

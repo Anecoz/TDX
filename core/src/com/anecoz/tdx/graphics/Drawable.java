@@ -21,6 +21,14 @@ public abstract class Drawable {
         return _position;
     }
 
+    public void setPosition(Vector2 pos) {
+        _position = pos;
+    }
+
+    public Texture getTexture() {
+        return _texture;
+    }
+
     public float distanceTo(Vector2 compare) {
         return _position.dst(compare);
     }
