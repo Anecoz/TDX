@@ -18,10 +18,13 @@ public abstract class Turret extends Drawable {
     public final static int DAMAGE_TURRET_TYPE = 0;
     public final static int SLOW_TURRET_TYPE = 1;
 
+    private final static int DAMAGE_TURRET_COST = 5;
+    private final static int SLOW_TURRET_COST = 10;
+
     public Turret(Texture texture, Vector2 position) {
         super(texture, position, 1.0f);
 
-        _damage = 6f;
+        _damage = 15f;
         _range = 1.5f;
         _cooldown = 0.5f;
         _lastActionTime = -1;
@@ -30,9 +33,9 @@ public abstract class Turret extends Drawable {
     public static int getCostFromType(int type) {
         switch (type) {
             case DAMAGE_TURRET_TYPE:
-                return 10;
+                return DAMAGE_TURRET_COST;
             case SLOW_TURRET_TYPE:
-                return 15;
+                return SLOW_TURRET_COST;
             default:
                 return -1;
         }

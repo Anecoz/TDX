@@ -3,6 +3,8 @@ package com.anecoz.tdx;
 import com.anecoz.tdx.entities.EntityHandler;
 import com.anecoz.tdx.entities.Player;
 import com.anecoz.tdx.level.Level;
+import com.anecoz.tdx.logic.WaveHandler;
+import com.anecoz.tdx.utils.ResourceHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,23 +28,28 @@ public class GameScreen implements Screen {
     private Level level;
     private EntityHandler entityHandler;
     private Player player;
+    private WaveHandler waveHandler;
 
     OrthographicCamera camera;
 
     public GameScreen(final TDXGame gam) {
+        ResourceHandler.init();
         game = gam;
+
+        level = new Level("map_02.tmx", game.batch); //< gotta do level first to init static dims
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Level.MAP_WIDTH, Level.MAP_HEIGHT+1); //< for space for bar
 
-        level = new Level("map_02.tmx", game.batch);
         player = new Player(level);
         entityHandler = new EntityHandler(level, player);
+        waveHandler = new WaveHandler(level);
     }
 
     private void tick() {
         player.tick(camera);
         entityHandler.tick();
+        waveHandler.tick();
     }
 
     @Override
@@ -63,6 +70,7 @@ public class GameScreen implements Screen {
         game.batch.end();
 
         player.getMoney().render();
+        waveHandler.render();
     }
 
     @Override

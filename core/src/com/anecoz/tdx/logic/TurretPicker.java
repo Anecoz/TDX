@@ -1,9 +1,9 @@
 package com.anecoz.tdx.logic;
 
-import com.anecoz.tdx.entities.EntityHandler;
 import com.anecoz.tdx.entities.Player;
 import com.anecoz.tdx.entities.Turret;
 import com.anecoz.tdx.level.Level;
+import com.anecoz.tdx.utils.ResourceHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -85,20 +85,20 @@ public class TurretPicker {
             Vector2 currPos = (Vector2)pair.getKey();
             if (_hasSelection && currTurrType == _selectedTurretType) {
                 float tmpSize = _size*1.3f;
-                batch.draw(EntityHandler.getTurretTexture(currTurrType),
+                batch.draw(ResourceHandler.getTurretTexture(currTurrType),
                         currPos.x + 0.5f - tmpSize/2.0f,
                         currPos.y + 0.5f - tmpSize/2.0f,
                         tmpSize, tmpSize);
             }
             else {
-                batch.draw(EntityHandler.getTurretTexture(currTurrType),
+                batch.draw(ResourceHandler.getTurretTexture(currTurrType),
                         currPos.x + 0.5f - _size/2.0f,
                         currPos.y + 0.5f - _size/2.0f,
                         _size, _size);
 
                 if (!_player.getMoney().canAfford(Turret.getCostFromType(currTurrType))) {
                     // Draw cross over
-                    batch.draw(EntityHandler._crossTexture,
+                    batch.draw(ResourceHandler._crossTexture,
                             currPos.x, currPos.y,
                             1.0f, 1.0f);
                 }

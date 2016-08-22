@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class Level {
 
     // How many tiles in x/y-direction
-    public final static int MAP_WIDTH = 10;
-    public final static int MAP_HEIGHT = 5;
+    public static int MAP_WIDTH;
+    public static int MAP_HEIGHT;
 
     private final static String COLLISION_PROPERTY = "isCollision";
     private final static String START_TILE_PROPERTY = "isStartTile";
@@ -30,6 +30,8 @@ public class Level {
     public Level(String mapName, SpriteBatch batch) {
         TiledMap map = new TmxMapLoader().load(mapName);
         _tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
+        MAP_WIDTH = _tileLayer.getWidth();
+        MAP_HEIGHT = _tileLayer.getHeight();
 
         _mapRenderer = new OrthogonalTiledMapRenderer(map, 1/64f, batch);
 
